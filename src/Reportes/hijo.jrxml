@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="752" pageHeight="572" orientation="Landscape" columnWidth="752" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="a270fba2-15a9-4b26-b376-b0fc7829fca0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="valorNegativo">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{total}<0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{kilos_calcular}<0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{cantidad_calcular}<0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="folio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select destino.preciokilo as preciokilo,
+destino.nombre as destino,carro.placas as placas,chofer.nombre as chofer,
+pollos.folio as folio,reja.numero as reja,historico.pedidos_id as pedidos,historico.cantidad as cantidad,historico.tipo as tipo,
+historico.kilos as kilos, historico.fecha as fecha,historico.observacion as comentarios,pedidos.configuracion_id as factura
+from pollos,historico,pedidos,reja,ruta,chofer,carro,destino
+where
+pollos.folio=historico.pollos_folio and
+historico.pedidos_id=pedidos.id and
+pedidos.reja_id=reja.id and 
+pedidos.ruta_id=ruta.id and
+ruta.destino_id=destino.id and
+ruta.chofer_id=chofer.id and
+carro.id=destino.carro_id 
+and pollos.folio=$P{folio} order by pedidos.configuracion_id desc]]>
+	</queryString>
+	<field name="preciokilo" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="destino" class="java.lang.String"/>
+	<field name="placas" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="chofer" class="java.lang.String"/>
+	<field name="folio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="reja" class="java.lang.Integer"/>
+	<field name="pedidos" class="java.lang.Integer"/>
+	<field name="cantidad" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tipo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kilos" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="comentarios" class="java.lang.String"/>
+	<field name="factura" class="java.lang.Integer"/>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{tipo}.intValue()==4 ? ($F{preciokilo}*$F{kilos}*-1): 
+($F{tipo}.intValue()==8 ? ($F{preciokilo}*$F{kilos}*-1): ($F{preciokilo}*$F{kilos}))]]></variableExpression>
+	</variable>
+	<variable name="sumatotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{total}]]></variableExpression>
+	</variable>
+	<variable name="kilos_calcular" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{tipo}.intValue()==4 ? ($F{kilos}*-1): 
+($F{tipo}.intValue()==8 ? ($F{kilos}*-1): $F{kilos})]]></variableExpression>
+	</variable>
+	<variable name="suma_kilos_total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{kilos_calcular}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_calcular" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{tipo}.intValue()==4 ? ($F{cantidad}*-1): 
+($F{tipo}.intValue()==8 ? ($F{cantidad}*-1): $F{cantidad})]]></variableExpression>
+	</variable>
+	<variable name="suma_cantidad_total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{cantidad_calcular}]]></variableExpression>
+	</variable>
+	<variable name="comentarios" class="java.lang.String">
+		<variableExpression><![CDATA[$F{tipo}.intValue()==1 ? "Tránsito":
+($F{tipo}.intValue()==2 ? "Pagada": 
+($F{tipo}.intValue()==3 ? "Crédito (Pendiente)": 
+($F{tipo}.intValue()==4 ? "Cancelado con devolución": 
+($F{tipo}.intValue()==5 ? "Cŕedito (Pagado)":
+($F{tipo}.intValue()==8 ? "Cancelado sin Devolución": "Error")))))]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="213" y="0" width="59" height="20" uuid="c89a4895-f4a5-46de-8a52-1e641e61aadc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[PLACAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="272" y="0" width="76" height="20" uuid="45de2ced-33e1-4eb2-bfdb-0c997a7e80f5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CHOFER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="0" width="47" height="20" uuid="74ec0334-a8d5-4396-b814-60c3447e3e99"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[No. REJA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="0" width="52" height="20" uuid="4298d683-04db-4cae-bc1e-ec9f06b4ff2c"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="447" y="0" width="46" height="20" uuid="f37083e2-1651-4bf0-a868-531ba660fb2e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[KILOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="558" y="0" width="69" height="20" uuid="ae815329-6d0f-44c5-82cb-8a9b657b6a9f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="649" y="0" width="76" height="20" uuid="a5bdc740-1fbe-4976-acfe-5ce10535cab1"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[COMENTARIOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="58" height="20" uuid="fc05d36f-150c-4561-9f35-7d2f0fa6898a"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="0" width="106" height="20" uuid="ce18a872-4035-4a30-85a7-bf8ba544466d"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[DESTINO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="164" y="0" width="49" height="20" uuid="7fe668ac-749c-4a5e-a932-71041aa72878"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[$ x KILO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="494" y="0" width="64" height="20" uuid="6f012c04-ffa3-4adc-88be-75ecbf12a3b6"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="59" y="0" width="105" height="20" uuid="7c8b7a40-1afa-4e72-957d-2b0384cbad0f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="213" y="0" width="59" height="20" uuid="216c8f96-0133-4150-a9e5-300ec6af55e5"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{placas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="272" y="0" width="76" height="20" uuid="9996f6b6-45f5-47fd-92b7-29e6da79bfb9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chofer}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="348" y="2" width="47" height="20" uuid="1583105f-30af-4f82-b5d6-dc8217aa59d3"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reja}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="558" y="6" width="91" height="10" uuid="dec92ded-dc36-4e5f-9fa2-57a74eaf3728"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="58" height="20" uuid="6e9b2cc8-c1f1-4851-8e1c-ab106dca6f43"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{factura}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="22" width="728" height="1" uuid="fa82797e-752a-48b9-a3f3-2711109b4e01"/>
+			</line>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="164" y="0" width="38" height="20" uuid="e1857202-b734-4f75-b75d-934f6c9ac42e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{preciokilo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="valorNegativo" x="493" y="3" width="65" height="15" uuid="59623cae-fc67-4648-8623-a2aaaf128775"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="valorNegativo" x="447" y="2" width="46" height="20" uuid="11477c75-7a9d-48e5-8b60-ca2bf43f0e3d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{kilos_calcular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="703" y="1" width="35" height="22" forecolor="#FFFFFF" uuid="050603aa-328b-4536-92db-ed14db21e711"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tipo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement x="703" y="0" width="0" height="20" forecolor="#FFFFFF" uuid="331c8206-cf4d-4642-937e-a3b318acbaf9"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kilos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="681" y="1" width="22" height="20" forecolor="#FFFFFF" uuid="96ded77f-7d72-41d5-9769-acdf50227f6f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="valorNegativo" x="394" y="2" width="52" height="20" uuid="8f570002-b06b-4499-ade3-f045a8edfcfb"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{cantidad_calcular}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="652" y="2" width="100" height="20" uuid="1e92a7e3-16fe-4e60-897a-3fc5455c36e5"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{comentarios}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="7" splitType="Stretch"/>
+	</columnFooter>
+	<summary>
+		<band height="26" splitType="Stretch">
+			<staticText>
+				<reportElement x="327" y="2" width="67" height="20" uuid="1ddaebc9-8e29-41fc-8c7e-b785f09578ef"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTALES:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="493" y="2" width="65" height="20" uuid="df271793-ddd6-4c3c-95b0-a8a23781af6f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumatotal}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement x="447" y="2" width="46" height="20" uuid="7f8aa786-7515-4d19-9ea1-38011cd8c1ab"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{suma_kilos_total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.0">
+				<reportElement x="395" y="2" width="51" height="20" uuid="a0336603-f9be-46ed-9f79-7a8653c8b376"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{suma_cantidad_total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

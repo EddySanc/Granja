@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d6b0ae91-5f37-497b-abd9-30cc5b1d3ef6">
+	<property name="ireport.zoom" value="0.9090909090909094"/>
+	<property name="ireport.x" value="173"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="factura" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select total,sum(monto) as abonado, total-sum(monto) as restante from vcredito as c inner join venta_credito as vc on c.factura = vc.configuracion_id 
+inner join credito as cr on vc.credito_id = cr.id where factura = $P{factura}]]>
+	</queryString>
+	<field name="total" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="abonado" class="java.lang.Double"/>
+	<field name="restante" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="33" splitType="Stretch">
+			<staticText>
+				<reportElement x="172" y="2" width="119" height="19" uuid="09e4d41e-60fa-4ed6-b329-7a4fa613c245"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Credito: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="403" y="2" width="1" height="31" uuid="7cc29d8e-2274-4d77-8ddc-40ced15566dd"/>
+			</line>
+			<staticText>
+				<reportElement x="410" y="2" width="127" height="19" uuid="05b4704e-3f91-4b6a-8b6e-d80cd328a26c"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Abonado: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="631" y="2" width="1" height="31" uuid="47386c21-9869-4483-83f8-a9d6f1105006"/>
+			</line>
+			<staticText>
+				<reportElement x="639" y="2" width="76" height="19" uuid="4ef3fd39-969c-44d5-98c4-7917c7bf0130"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Restante:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="301" y="2" width="98" height="19" uuid="04e4efab-324c-43ec-b9f6-0c68defda41e"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="537" y="2" width="94" height="19" uuid="0ba5a442-0067-4305-a333-e6c15c7b4098"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{abonado}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="715" y="2" width="87" height="20" uuid="bbf88ae2-79b2-4682-a0a6-40a9ec65410a"/>
+				<textElement>
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{restante}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+</jasperReport>

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="226" pageHeight="842" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="01c92eb0-fef2-479c-9dbb-2792886aee48">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="destino" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fecha" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     pedidos.`cantidad` AS pedidos_cantidad,
+     pedidos.`kilos` AS pedidos_kilos,
+     pedidos.`fecha` AS pedidos_fecha,
+     reja.`numero` AS reja_numero,
+     destino.`nombre` AS destino_nombre,
+     destino.`preciokilo` AS destino_preciokilo,
+     chofer.`nombre` AS chofer_nombre,
+     pedidos.`configuracion_id` AS pedidos_configuracion_id,
+     negocio.`nombre` AS negocio_nombre,
+     negocio.`direccion` AS negocio_direccion,
+     negocio.`telefono` AS negocio_telefono
+FROM
+     `reja` reja INNER JOIN `pedidos` pedidos ON reja.`id` = pedidos.`reja_id`
+     INNER JOIN `ruta` ruta ON pedidos.`ruta_id` = ruta.`id`
+     INNER JOIN `destino` destino ON ruta.`destino_id` = destino.`id`
+     INNER JOIN `chofer` chofer ON ruta.`chofer_id` = chofer.`id`,
+     `negocio` negocio 
+	where destino.nombre=$P{destino} 
+	and DATE_FORMAT(pedidos.fecha,'%Y-%m-%d')=DATE($P{fecha})
+	and pedidos.estado=1
+order by pedidos.configuracion_id]]>
+	</queryString>
+	<field name="pedidos_cantidad" class="java.lang.Integer"/>
+	<field name="pedidos_kilos" class="java.lang.Double"/>
+	<field name="pedidos_fecha" class="java.sql.Timestamp"/>
+	<field name="reja_numero" class="java.lang.Integer"/>
+	<field name="destino_nombre" class="java.lang.String"/>
+	<field name="destino_preciokilo" class="java.math.BigDecimal"/>
+	<field name="chofer_nombre" class="java.lang.String"/>
+	<field name="pedidos_configuracion_id" class="java.lang.Integer"/>
+	<field name="negocio_nombre" class="java.lang.String"/>
+	<field name="negocio_direccion" class="java.lang.String"/>
+	<field name="negocio_telefono" class="java.lang.String"/>
+	<variable name="total" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{destino_preciokilo}*$F{pedidos_kilos}]]></variableExpression>
+	</variable>
+	<variable name="sumatotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{total}]]></variableExpression>
+	</variable>
+	<variable name="sumatotalkilos" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{pedidos_kilos}]]></variableExpression>
+	</variable>
+	<variable name="sumatotalaves" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{pedidos_cantidad}]]></variableExpression>
+	</variable>
+	<group name="pedidos_configuracion_id">
+		<groupExpression><![CDATA[$F{pedidos_configuracion_id}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<textField>
+					<reportElement style="SubTitle" x="43" y="1" width="37" height="12" forecolor="#006600" uuid="f56dd9e8-5b07-45a1-88c6-fe1df78ee083"/>
+					<textElement>
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{pedidos_configuracion_id}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="Column header" x="14" y="2" width="31" height="11" uuid="51c15f37-64bf-4e48-bf33-0848518a0059"/>
+					<textElement>
+						<font size="7"/>
+					</textElement>
+					<text><![CDATA[Factura:]]></text>
+				</staticText>
+				<rectangle>
+					<reportElement x="5" y="3" width="5" height="5" forecolor="#C0C0C0" backcolor="#C0C0C0" uuid="50cf5bf1-c002-4b1b-87a4-58e391940968"/>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column header" x="3" y="56" width="61" height="10" uuid="650bb9b6-151c-4a20-b678-e10ede83c899"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Precio por Kilo:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="Detail" x="73" y="54" width="47" height="10" uuid="e4e19eb9-8cdc-4f27-a43a-baac0847329a"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino_preciokilo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="73" y="45" width="90" height="10" uuid="70db0144-c251-4bfe-ac9c-0d603c16d84d"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="3" y="45" width="42" height="10" uuid="4f9d6ee6-2cee-47cd-8ea9-73adc36bf9ad"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Destino:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="3" y="35" width="42" height="10" uuid="857e3b18-0a85-476b-be9f-6945a3746403"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Conductor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="Detail" x="73" y="35" width="78" height="10" uuid="babc94e7-a443-41ea-8fde-c551f41580b7"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chofer_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-1" y="0" width="187" height="10" uuid="1c6fbd45-a469-45b6-b661-754c35230b1c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="186" height="10" uuid="c60661ca-93ad-4766-809e-17bf11db24c2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="186" height="10" uuid="0569abd3-5a6b-443d-afa9-ea8c775e8d1b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_telefono}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Transparent" x="0" y="0" width="186" height="66" uuid="8de62b11-19ed-489c-95ef-9ab8b8e0b819"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="8" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="23" width="186" height="1" uuid="05198f11-39a4-4e86-9c36-bb3af3d21780"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="43" y="12" width="44" height="10" uuid="f18164f0-14bc-4882-aa44-2869c3345aef"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="98" y="12" width="26" height="10" uuid="73e01bd8-e916-40dd-8832-276803d3b4b2"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_kilos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="0" y="13" width="25" height="10" uuid="ce09f78f-59e2-46d9-8a1b-fe2829e6562a"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reja_numero}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="43" y="0" width="44" height="12" uuid="f48d1ec3-fc41-4e69-8d5a-9e967840550f"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[No. de Aves]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="102" y="0" width="26" height="12" uuid="b181279b-8952-4998-8dbb-6d688b93c61c"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Kilos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="25" height="12" uuid="9930acee-e610-4172-9b0b-069865415204"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[#  Reja]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="135" y="0" width="43" height="12" uuid="65e1b4b5-a24b-4d87-8ac3-313ccacbcc2a"/>
+				<textElement textAlignment="Center">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="135" y="12" width="43" height="10" uuid="c11e29aa-dd44-4878-a483-8a113ef3eef1"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="79" y="0" width="63" height="10" uuid="5f242ee1-f390-4aad-b653-cb0f3ec8d45f"/>
+				<textElement>
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="0" y="0" width="95" height="10" uuid="39c5d6d6-6b76-4399-b402-6a4b64af87ac"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Fecha de Impresión: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="10" width="183" height="10" uuid="e1f23d05-55c4-4e47-8080-cc73479f6bf0"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Pedidos en Ruta]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="14" splitType="Stretch">
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="135" y="2" width="47" height="10" uuid="ffabda29-4c3f-41f4-86fc-53344f2ad79c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumatotal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="3" y="3" width="40" height="10" uuid="be84f790-7132-4e66-b41f-fba68284491c"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[TOTALES:]]></text>
+			</staticText>
+			<textField pattern="###0.0">
+				<reportElement x="105" y="3" width="25" height="10" uuid="cd35e9f0-2b0f-4ff0-8a53-eb07b369559f"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumatotalkilos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="46" y="3" width="30" height="10" uuid="cea07c97-cc3a-4caf-9849-76d69a24f62d"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumatotalaves}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

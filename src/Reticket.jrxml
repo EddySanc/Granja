@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ticket" pageWidth="186" pageHeight="255" columnWidth="186" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2cdfc0ea-7631-473a-a480-bc49c8c0bfc4">
+	<property name="ireport.zoom" value="3.104606615295775"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="factura" class="java.lang.Integer"/>
+	<parameter name="ruta" class="java.lang.String">
+		<defaultValueExpression><![CDATA["./Imagenes/"]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     negocio.`id` AS negocio_id,
+     negocio.`nombre` AS negocio_nombre,
+     negocio.`direccion` AS negocio_direccion,
+     negocio.`telefono` AS negocio_telefono,
+     pedidos.`id` AS pedidos_id,
+     pedidos.`cantidad` AS pedidos_cantidad,
+     pedidos.`kilos` AS pedidos_kilos,
+     pedidos.`estado` AS pedidos_estado,
+     pedidos.`fecha` AS pedidos_fecha,
+     pedidos.`ruta_id` AS pedidos_ruta_id,
+     pedidos.`reja_id` AS pedidos_reja_id,
+     pedidos.`configuracion_id` AS pedidos_configuracion_id,
+     ruta.`id` AS ruta_id,
+     ruta.`chofer_id` AS ruta_chofer_id,
+     ruta.`destino_id` AS ruta_destino_id,
+     ruta.`estado` AS ruta_estado,
+     ruta.`fecha` AS ruta_fecha,
+     ruta.`observacion` AS ruta_observacion,
+     destino.`id` AS destino_id,
+     destino.`nombre` AS destino_nombre,
+     destino.`preciokilo` AS destino_preciokilo,
+     (pedidos.kilos*destino.preciokilo) as totkilos,
+     destino.`carro_id` AS destino_carro_id,
+     chofer.`id` AS chofer_id,
+     chofer.`nombre` AS chofer_nombre,
+     chofer.`direccion` AS chofer_direccion,
+     chofer.`telefono` AS chofer_telefono,
+     chofer.`fecha` AS chofer_fecha,
+     reja.`id` AS reja_id,
+     reja.`numero` AS reja_numero,
+     reja.`descripcion` AS reja_descripcion,
+     configuracion.`id` AS configuracion_id,
+     configuracion.`factura` AS configuracion_factura
+FROM
+     `ruta` ruta INNER JOIN `pedidos` pedidos ON ruta.`id` = pedidos.`ruta_id`
+     INNER JOIN `destino` destino ON ruta.`destino_id` = destino.`id`
+     INNER JOIN `chofer` chofer ON ruta.`chofer_id` = chofer.`id`
+     INNER JOIN `reja` reja ON pedidos.`reja_id` = reja.`id`
+     INNER JOIN `configuracion` configuracion ON pedidos.`configuracion_id` = configuracion.`id`,
+     `negocio` negocio
+where pedidos.configuracion_id=$P{factura}]]>
+	</queryString>
+	<field name="negocio_id" class="java.lang.Integer"/>
+	<field name="negocio_nombre" class="java.lang.String"/>
+	<field name="negocio_direccion" class="java.lang.String"/>
+	<field name="negocio_telefono" class="java.lang.String"/>
+	<field name="pedidos_id" class="java.lang.Integer"/>
+	<field name="pedidos_cantidad" class="java.lang.Integer"/>
+	<field name="pedidos_kilos" class="java.lang.Double"/>
+	<field name="pedidos_estado" class="java.lang.Integer"/>
+	<field name="pedidos_fecha" class="java.sql.Timestamp"/>
+	<field name="pedidos_ruta_id" class="java.lang.Integer"/>
+	<field name="pedidos_reja_id" class="java.lang.Integer"/>
+	<field name="pedidos_configuracion_id" class="java.lang.Integer"/>
+	<field name="ruta_id" class="java.lang.Integer"/>
+	<field name="ruta_chofer_id" class="java.lang.Integer"/>
+	<field name="ruta_destino_id" class="java.lang.Integer"/>
+	<field name="ruta_estado" class="java.lang.Integer"/>
+	<field name="ruta_fecha" class="java.sql.Timestamp"/>
+	<field name="ruta_observacion" class="java.lang.String"/>
+	<field name="destino_id" class="java.lang.Integer"/>
+	<field name="destino_nombre" class="java.lang.String"/>
+	<field name="destino_preciokilo" class="java.math.BigDecimal"/>
+	<field name="totkilos" class="java.lang.Double"/>
+	<field name="destino_carro_id" class="java.lang.Integer"/>
+	<field name="chofer_id" class="java.lang.Integer"/>
+	<field name="chofer_nombre" class="java.lang.String"/>
+	<field name="chofer_direccion" class="java.lang.String"/>
+	<field name="chofer_telefono" class="java.lang.String"/>
+	<field name="chofer_fecha" class="java.sql.Timestamp"/>
+	<field name="reja_id" class="java.lang.Integer"/>
+	<field name="reja_numero" class="java.lang.Integer"/>
+	<field name="reja_descripcion" class="java.lang.String"/>
+	<field name="configuracion_id" class="java.lang.Integer"/>
+	<field name="configuracion_factura" class="java.lang.Integer"/>
+	<variable name="sumakilos" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{pedidos_kilos}]]></variableExpression>
+	</variable>
+	<variable name="sumaaves" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{pedidos_cantidad}]]></variableExpression>
+	</variable>
+	<variable name="sumatotal" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{totkilos}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="184" height="18" uuid="8c00b41c-2bb1-46d1-b4f3-416b0a5bfdf3"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="1" y="17" width="183" height="12" uuid="368c7cd3-2137-4f84-a7cc-784c153ba6a3"/>
+				<textElement textAlignment="Center">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_direccion}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="0" y="30" width="184" height="15" uuid="861c0915-6fd8-4cda-9389-97722c6f24bc"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{negocio_telefono}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="26" y="44" width="50" height="15" uuid="70788c31-240d-4a6b-9f61-a8d6e5bf756a"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Destino:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="Detail" x="82" y="44" width="99" height="15" uuid="2a8c763b-7bad-48ee-aa16-0fb872d428f3"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="0" y="59" width="76" height="15" uuid="ec493810-9f8a-4bce-b32c-524fbf90b15f"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Conductor:]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="Detail" x="82" y="59" width="102" height="15" uuid="7fa3b0de-e0a5-4cc6-b652-842d190b02c7"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{chofer_nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="82" y="74" width="83" height="15" uuid="a33f9907-838e-42a7-b995-4a147d21a793"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_configuracion_id}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="158" y="39" width="23" height="24" uuid="2944cc75-b35d-447b-961e-76e0bc8b175f"/>
+				<imageExpression><![CDATA[$P{ruta}+"gallo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Column header" x="2" y="89" width="74" height="15" uuid="4e0d6aef-6109-418b-a30a-58030133eac7"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Precio x Kilo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="2" y="74" width="75" height="15" uuid="dc0b3030-19a9-4d95-97f0-48721ba320ef"/>
+				<textElement textAlignment="Right">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[No. Factura:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement style="Detail" x="82" y="89" width="83" height="15" uuid="de9cdfc7-388b-4f4f-bab7-799188220bb2"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino_preciokilo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="18" width="186" height="1" uuid="eaa245bc-78f6-4ea3-8877-9fe2bba39f99"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="3" width="44" height="15" uuid="d5d8e5bb-441a-49d3-a6ca-6c757305adbd"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[REJA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="95" y="3" width="40" height="15" uuid="5535ff37-df86-4d80-b772-1364e0946358"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[KILOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="45" y="3" width="50" height="15" uuid="88288b1d-33fd-444e-b871-62143136f0e9"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[# AVES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="135" y="3" width="49" height="15" uuid="7ee3d856-1951-4725-8ab6-45bd664927b9"/>
+				<textElement textAlignment="Center">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="186" height="1" uuid="dcb529b7-6330-466d-b10d-734b15293125"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField pattern="###0">
+				<reportElement style="Detail" x="45" y="0" width="50" height="15" uuid="a84cffb2-f187-4fcf-9a1d-b6d3a92594ab"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_cantidad}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement style="Detail" x="95" y="0" width="40" height="15" uuid="6d49359e-d4eb-4d7a-b294-51791d7578a0"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_kilos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="1" y="0" width="43" height="15" uuid="f7167570-7312-4336-a42b-bd92ca4d912a"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{reja_numero}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="135" y="0" width="46" height="15" uuid="1c8904e9-135e-468b-a4c9-3c8e22c328d3"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{totkilos}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement style="Detail" x="27" y="5" width="50" height="15" uuid="a1386046-a37e-4e34-8114-2380656b9b6b"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pedidos_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="5" width="44" height="15" uuid="49e195db-b2e2-403d-82c1-0645b60f587c"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="1" width="43" height="15" uuid="5a41b93b-e9d6-43a0-9765-3455413be559"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<text><![CDATA[Totales:]]></text>
+			</staticText>
+			<textField pattern="###0.0">
+				<reportElement x="91" y="2" width="40" height="14" uuid="4d9ebba3-8613-4053-b5a3-60db4b7ef4e6"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumakilos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="3" width="37" height="12" uuid="5d988345-4308-4ada-b763-730b8f56ff98"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{sumaaves}]]></textFieldExpression>
+			</textField>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="131" y="2" width="53" height="15" uuid="cddbc98d-dc14-476f-956b-b7aa707b9f01"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{sumatotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

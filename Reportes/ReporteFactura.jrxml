@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="802" pageHeight="555" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="7572c997-5e58-4e11-a98f-4b0a41ade4dc">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["./Reportes/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="factura" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT distinct
+     pollos.folio AS folio,
+     pollos.cantidad AS pollos_cantidad,
+     pollos.fecha AS pollos_fecha,
+     proveedor.nombre AS proveedor_nombre,
+     proveedor.preciokilo AS proveedor_preciokilo,
+     historico.cantidad AS historico_cantidad,
+     historico.kilos AS historico_kilos
+FROM proveedor,pollos,historico
+where 
+     proveedor.id=pollos.proveedor_id and
+     pollos.folio=historico.pollos_folio and
+     pollos.folio = $P{factura} group by folio;]]>
+	</queryString>
+	<field name="folio" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pollos_cantidad" class="java.lang.Integer"/>
+	<field name="pollos_fecha" class="java.sql.Timestamp"/>
+	<field name="proveedor_nombre" class="java.lang.String"/>
+	<field name="proveedor_preciokilo" class="java.math.BigDecimal"/>
+	<field name="historico_cantidad" class="java.lang.Integer"/>
+	<field name="historico_kilos" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<rectangle>
+				<reportElement x="14" y="26" width="773" height="73" uuid="deb1b73e-ad08-4dc7-9fe2-a2c29fb89e62"/>
+			</rectangle>
+			<staticText>
+				<reportElement style="Title" x="2" y="0" width="800" height="26" uuid="89e649ff-b69d-4bd7-aabf-7338399726bd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="15" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Reporte Detallado de Ventas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="25" y="30" width="131" height="15" forecolor="#736343" uuid="a9522ed1-1de4-4d99-8757-814e04aff7b9"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Folio de Factura:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" x="185" y="30" width="160" height="15" uuid="daf22baf-55a0-4353-8640-5bec88dbd1ce"/>
+				<textFieldExpression><![CDATA[$F{folio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="23" y="75" width="131" height="15" forecolor="#736343" uuid="711c3f67-be0d-4550-b23e-8a85ad875b3b"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Cantidad Disponible:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" x="185" y="75" width="160" height="15" uuid="4ccf0c4f-e154-4257-aad1-b1e59ca917be"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pollos_cantidad}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="441" y="30" width="160" height="15" forecolor="#736343" uuid="09842f5e-9349-4027-a673-9b9a4f9f4e83"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Fecha de Registro:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="441" y="50" width="160" height="15" forecolor="#736343" uuid="9574364e-419f-48ee-8012-f56532a09955"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Proveedor:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" x="617" y="50" width="160" height="15" uuid="c5561715-7d9f-4b85-8732-b6af5a9a0744"/>
+				<textFieldExpression><![CDATA[$F{proveedor_nombre}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" x="617" y="30" width="160" height="15" uuid="a949681e-5c45-49cf-81f4-a41db5f73d01"/>
+				<textFieldExpression><![CDATA[$F{pollos_fecha}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="441" y="74" width="160" height="15" forecolor="#736343" uuid="5e3826f2-3639-4510-9b80-7fe3ec1925e5"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Precio Kilo:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true" pattern="¤ #,##0.00">
+				<reportElement style="Detail" x="617" y="74" width="160" height="15" uuid="e0f8a200-7741-455a-9724-bac82623e9cb"/>
+				<textFieldExpression><![CDATA[$F{proveedor_preciokilo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Column header" x="23" y="50" width="131" height="15" forecolor="#736343" uuid="0ff9f1d1-a665-4658-8b60-587b8cb28a7e"/>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Cantidad Ingresada:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="185" y="50" width="160" height="20" uuid="08381e18-f374-47db-8a8e-c8b1261f6446"/>
+				<textElement>
+					<font fontName="Arial" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{historico_cantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="5" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="d1937747-150b-4aff-807d-a8686990288e"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="50" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="359304b5-af1b-42bb-a5e1-f5a30617c3e6"/>
+			</frame>
+			<subreport>
+				<reportElement x="14" y="0" width="784" height="47" uuid="3c4c4041-1ffe-45f0-9ff0-3f0a33d75ca2"/>
+				<subreportParameter name="folio">
+					<subreportParameterExpression><![CDATA[$F{folio}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"hijo.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="8" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

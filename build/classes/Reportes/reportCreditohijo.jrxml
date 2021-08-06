@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reportCreditohijo" language="groovy" pageWidth="802" pageHeight="575" orientation="Landscape" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="f7e2c5f1-e053-46a0-99c2-e7cd65da045e">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<parameter name="factura" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     monto,fecha
+
+FROM
+     `venta_credito` vc INNER JOIN `credito` c ON vc.`credito_id` = c.`id`
+WHERE
+     configuracion_id = $P{factura};]]>
+	</queryString>
+	<field name="monto" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="contador" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{monto}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="104" splitType="Stretch">
+			<staticText>
+				<reportElement style="SubTitle" x="11" y="77" width="194" height="22" forecolor="#000000" uuid="59ccfe0a-663c-4976-bff4-610c28a7e4c6"/>
+				<textElement>
+					<font size="12" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[Desglose de abonos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="219" y="-32" width="529" height="20" backcolor="#666666" uuid="40dce86d-11cb-4bf3-be40-f7458ffaa52e"/>
+				<staticText>
+					<reportElement style="Column header" x="41" y="0" width="50" height="15" uuid="b01dc6e5-2738-4ed4-86bc-5e76f5b9705a"/>
+					<text><![CDATA[monto]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="Column header" x="361" y="0" width="43" height="15" uuid="ebcd8629-ae89-4160-8ac2-4a6f64f03281"/>
+					<text><![CDATA[fecha]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27" splitType="Stretch">
+			<frame>
+				<reportElement x="258" y="-34" width="488" height="21" uuid="738c718a-8b9c-4194-a238-fad632bea3c4"/>
+				<textField>
+					<reportElement style="Detail" x="1" y="3" width="230" height="15" uuid="a163b6ee-c848-4a53-9df2-914291bef6d5"/>
+					<textFieldExpression><![CDATA[$F{monto}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Detail" x="318" y="2" width="125" height="15" uuid="515fafd6-f10a-459a-be74-559a50fd7eef"/>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+</jasperReport>

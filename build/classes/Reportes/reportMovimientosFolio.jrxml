@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5febb043-abaf-4bec-b3d8-33aba07e8f31">
+	<property name="ireport.zoom" value="1.2100000000000006"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="style1" mode="Opaque" forecolor="#010101">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{tipo} == 6]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{tipo} == 7]]></conditionExpression>
+			<style forecolor="#015F0B"/>
+		</conditionalStyle>
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{tipo} == -1]]></conditionExpression>
+			<style forecolor="#3A8BD5"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="folio" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select tipo,pollos_folio as folio,cantidad,kilos,fecha,observacion from historico  where tipo =  pedidos_id and pedidos_id !=1 and pollos_folio =  $P{folio} order by fecha desc]]>
+	</queryString>
+	<field name="tipo" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="folio" class="java.lang.String"/>
+	<field name="cantidad" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kilos" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="fecha" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="observacion" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="78" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="9" width="572" height="61" uuid="49cc70e8-2ad2-4b00-8301-cbc96691fde8"/>
+			</rectangle>
+			<textField>
+				<reportElement x="286" y="46" width="100" height="20" uuid="04b0748c-83c9-4c95-ad3b-18b1d6df0be2"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{folio}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="11" width="562" height="20" uuid="1af182cb-3995-4356-a63b-961cf284f37c"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Movimientos por Folio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="209" y="44" width="45" height="20" uuid="e91b0ef0-7c54-4cd6-be05-e2b236decff5"/>
+				<textElement>
+					<font size="14" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Folio: ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="28">
+			<rectangle>
+				<reportElement x="0" y="0" width="572" height="20" backcolor="#7B7878" uuid="d988936e-f5a8-4297-9c86-b6b342fb58de"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="0" width="74" height="20" forecolor="#FEFEFE" uuid="632a359e-42db-4ce3-a0d8-55805c075d4d"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CANTIDAD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="78" y="0" width="87" height="20" forecolor="#FEFEFE" uuid="a169dc4a-8c6f-4b1b-b8a8-f294d89c31f1"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[KILOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="0" width="139" height="20" forecolor="#FEFEFE" uuid="3b06286f-82e4-414b-842d-3c6f26a02dd8"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="305" y="0" width="267" height="20" forecolor="#FEFEFE" uuid="b45dc962-b005-45f5-bd51-19c2342e38d2"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[DESCRIPCIÓN]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<frame>
+				<reportElement x="0" y="8" width="572" height="18" uuid="a57969aa-93d1-4f44-9fa7-902e610b6e00"/>
+				<textField>
+					<reportElement style="style1" x="5" y="0" width="73" height="18" uuid="e1d10de6-14ef-41ba-9f14-11f7d7a5818c"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="78" y="2" width="1" height="10" uuid="70b099f4-1b13-4a06-bb16-818bece3d006"/>
+				</line>
+				<textField>
+					<reportElement style="style1" x="79" y="0" width="86" height="18" uuid="2f7773c3-6227-45d8-bb4f-a78cc949661b"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{kilos}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="165" y="2" width="1" height="10" uuid="31005703-3a94-4464-869a-80bc5c78dcf1"/>
+				</line>
+				<textField>
+					<reportElement style="style1" x="166" y="2" width="138" height="15" uuid="f6d9bb41-cdff-4b88-a91d-fd782a675381"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="304" y="2" width="1" height="10" uuid="a7081c8b-2db6-4428-b410-cc099cdc0e07"/>
+				</line>
+				<textField>
+					<reportElement style="style1" x="305" y="1" width="267" height="17" uuid="e8664a42-d988-4776-a2e4-e737a895409a"/>
+					<textElement textAlignment="Center"/>
+					<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="43" splitType="Stretch"/>
+	</summary>
+</jasperReport>

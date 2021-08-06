@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="88518c42-eb36-4513-96f0-0791a202e4f1">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Times New Roman" fontSize="50" isBold="true" pdfFontName="Times-Bold"/>
+	<style name="SubTitle" forecolor="#736343" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<style name="Row" mode="Transparent">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{REPORT_COUNT}%2 == 0]]></conditionExpression>
+			<style backcolor="#E6DAC3"/>
+		</conditionalStyle>
+	</style>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$V{precio}<0]]></conditionExpression>
+			<style forecolor="#FF0000"/>
+		</conditionalStyle>
+	</style>
+	<parameter name="destino" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechainicial" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="fechafinal" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     insumos.`descripcion` AS insumos_descripcion,
+     insumos.`precio` AS insumos_precio,
+     insumos.`fecha` AS insumos_fecha,
+     destino.`nombre` AS destino_nombre,
+     usuario.`nombre` AS usuario_nombre,
+     insumos.`estado` AS insumos_estado
+FROM
+    destino,insumos,usuario
+where
+	destino.id=insumos.destino_id and
+	insumos.usuario_id=usuario.id
+and destino.nombre=$P{destino}
+and  DATE_FORMAT(insumos.fecha,'%Y-%m-%d')>=$P{fechainicial} and DATE_FORMAT(insumos.fecha,'%Y-%m-%d')<=$P{fechafinal}]]>
+	</queryString>
+	<field name="insumos_descripcion" class="java.lang.String"/>
+	<field name="insumos_precio" class="java.math.BigDecimal"/>
+	<field name="insumos_fecha" class="java.sql.Timestamp"/>
+	<field name="destino_nombre" class="java.lang.String"/>
+	<field name="usuario_nombre" class="java.lang.String"/>
+	<field name="insumos_estado" class="java.lang.Integer"/>
+	<variable name="contador" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{insumos_precio}]]></variableExpression>
+	</variable>
+	<variable name="condicion" class="java.lang.String">
+		<variableExpression><![CDATA[$F{insumos_estado}.intValue()==0 ? "Insumo Cancelado": "Activo"]]></variableExpression>
+	</variable>
+	<variable name="precio" class="java.lang.Double">
+		<variableExpression><![CDATA[$F{insumos_estado}.intValue()==0 ? ($F{insumos_precio}*-1): ($F{insumos_precio})]]></variableExpression>
+	</variable>
+	<variable name="suma_precio" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{aux}]]></variableExpression>
+	</variable>
+	<variable name="aux" class="java.lang.Double">
+		<variableExpression><![CDATA[$V{precio}<0 ? ($F{insumos_precio}*0): $F{insumos_precio}]]></variableExpression>
+	</variable>
+	<variable name="sumatoriacantidad" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$V{aux}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="1" y="0" width="801" height="29" uuid="990e156e-16c4-4a4c-9fd3-413531416eb6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="14" pdfFontName="Times-Roman"/>
+				</textElement>
+				<text><![CDATA[Movimiento de Insumos ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="100" height="20" uuid="9a403b42-b9e2-4e7c-9061-c293e0a48139"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ruta:]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement style="Detail" x="40" y="29" width="238" height="15" uuid="4f6f45c6-e931-426b-8574-eaa74cccf52b"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{destino_nombre}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="369" y="33" width="100" height="20" uuid="d34b9dc1-3e89-4677-8142-1d951ae471aa"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicial:]]></text>
+			</staticText>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="469" y="33" width="100" height="20" uuid="3f6f1ba9-d841-41f9-a817-5ad5bcc7eee8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechainicial}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="369" y="53" width="100" height="20" uuid="5fdf774b-b21e-4f6d-8f17-ea94a25265e8"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Inicial:]]></text>
+			</staticText>
+			<textField pattern="yyyy/MM/dd">
+				<reportElement x="469" y="53" width="100" height="20" uuid="4c738600-740d-4df4-b24c-a11a43aa6b33"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{fechafinal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="802" height="1" uuid="59f5d5a2-f291-4ac6-83b7-7675bfd4da4d"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="27" y="0" width="224" height="15" forecolor="#736343" uuid="137c58b3-3680-4835-bb39-bd085932cb20"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="251" y="0" width="108" height="15" forecolor="#736343" uuid="794026d4-c62a-4a83-9a1b-1606f24f86b8"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Cantidad ($)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="369" y="0" width="133" height="15" forecolor="#736343" uuid="f314a91c-8f24-42e9-9973-5354d8d3513c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Fecha de Ingreso]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="510" y="0" width="155" height="15" forecolor="#736343" uuid="9c93f437-95aa-4b90-bf25-e8630e2b3eeb"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[¿Quien lo realizó?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="665" y="0" width="133" height="15" forecolor="#736343" uuid="c8a75b00-03ca-4839-9601-cb76913fb213"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="1" y="1" width="26" height="15" forecolor="#736343" uuid="20cd64c9-3b59-41ba-b6e9-c520921e7e9f"/>
+				<textElement>
+					<font fontName="Arial"/>
+				</textElement>
+				<text><![CDATA[No.]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement style="Row" mode="Opaque" x="0" y="0" width="802" height="15" uuid="cc393bf7-3a3f-4a9c-933d-2ffe962440cc"/>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="style1" x="27" y="0" width="224" height="15" uuid="528d6a6b-a083-43fa-89d3-cc44ee40c721"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{insumos_descripcion}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="Detail" x="782" y="0" width="16" height="15" forecolor="#FFFFFF" uuid="9c64e165-1b2b-4657-8ff4-d272f0a4c98c"/>
+					<textElement>
+						<font fontName="Arial" size="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{insumos_estado}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true" pattern="dd/MM/yyyy h.mm a">
+					<reportElement style="style1" x="369" y="0" width="133" height="15" uuid="e50f047e-0516-4e96-a7b2-6722db757240"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{insumos_fecha}]]></textFieldExpression>
+				</textField>
+				<textField isStretchWithOverflow="true">
+					<reportElement style="style1" x="510" y="0" width="155" height="15" uuid="a629a3a8-bd27-4888-8449-c0710370c182"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{usuario_nombre}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="1" y="0" width="26" height="15" uuid="ef8c03d3-53a8-4369-9b00-1f4cdbb6ded7"/>
+					<textElement>
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{contador}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="style1" x="665" y="0" width="117" height="15" uuid="2431f263-6699-4ffe-a940-4f07b70fd276"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{condicion}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement style="style1" x="251" y="0" width="118" height="15" uuid="eeeb24bd-c99c-4335-bfcd-0994b3967190"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{precio}]]></textFieldExpression>
+				</textField>
+				<textField pattern="¤ #,##0.00">
+					<reportElement x="163" y="2" width="88" height="13" forecolor="#FFFFFF" uuid="031b425b-0c56-45ab-86fa-dfdfa643ecad"/>
+					<textElement textAlignment="Center">
+						<font fontName="Arial" size="1"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{aux}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="6" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="802" height="1" uuid="09d298b0-6957-4017-93c5-8a3f7f09bae1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="25" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-21" y="1" width="843" height="24" forecolor="#D0B48E" backcolor="#F2EBDF" uuid="3daa9b74-7387-4942-bba3-298c3bb0af04"/>
+				<textField evaluationTime="Report">
+					<reportElement style="Column header" x="783" y="1" width="40" height="20" forecolor="#736343" uuid="80bd0e3e-267e-49b3-98b0-8bd07864ffbd"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="Column header" x="703" y="1" width="80" height="20" forecolor="#736343" uuid="38d3b54d-cef8-4b5a-9c22-172440399935"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				</textField>
+				<textField pattern="EEEEE dd MMMMM yyyy">
+					<reportElement style="Column header" x="22" y="1" width="197" height="20" forecolor="#736343" uuid="50c57d30-db87-4841-b721-b7831a4f17bc"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="Arial" size="10" isBold="false"/>
+					</textElement>
+					<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement x="151" y="0" width="100" height="20" uuid="a469a94a-0eb0-4648-81f6-4c9a0f6c82b1"/>
+				<textElement textAlignment="Right">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:]]></text>
+			</staticText>
+			<textField pattern="¤ #,##0.00">
+				<reportElement x="251" y="0" width="118" height="20" uuid="1340f2b1-6f9b-4530-adef-3d4f28937bfc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sumatoriacantidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>
